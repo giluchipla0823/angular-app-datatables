@@ -51,7 +51,7 @@ export class RenderNewColumnsComponent implements AfterViewInit, OnInit {
     // this.renderer.listenGlobal('document', 'click', (event) => {
     this.renderer.listen('document', 'click', (event) => {
       if (event.target.hasAttribute("view-person-id")) {
-        console.log('person id', event.target.getAttribute("view-person-id"));
+          console.log('person id', event.target.getAttribute("view-person-id"));
         // console.log(event.srcElement, this);
       }
     });

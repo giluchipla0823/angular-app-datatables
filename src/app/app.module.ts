@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { ZeroConfigComponent } from './components/zero-config/zero-config.component';
 import { WithAjaxComponent } from './components/with-ajax/with-ajax.component';
 import { RenderNewColumnsComponent } from './components/render-new-columns/render-new-columns.component';
+import { InitViewChildComponent } from './components/init-view-child/init-view-child.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ZeroConfigComponent,
     WithAjaxComponent,
-    RenderNewColumnsComponent
+    RenderNewColumnsComponent,
+    InitViewChildComponent
   ],
   imports: [
     BrowserModule,
