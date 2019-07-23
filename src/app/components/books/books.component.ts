@@ -1,7 +1,8 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import datatablesHelper from '../../helpers/datatables.helper';
 
 declare var $;
-
 
 @Component({
   selector: 'app-books',
@@ -9,39 +10,28 @@ declare var $;
   styleUrls: ['./books.component.css']
 })
 export class BooksComponent implements AfterViewInit, OnInit {
-
+  
   @ViewChild('dataTable') table;
+  @ViewChild('template') template;
   dataTable: any;
-  dataTableInstance: any;
-
+  dtInstance: any;
   dtOptions: any = {};
 
-  constructor(){
+  form: any = {
+    data: {}
+  };
+
+  private _datatablesHelper: any = datatablesHelper();
+
+  public modalRef: BsModalRef;
+
+  constructor(private modalService: BsModalService) {
+
   }
 
   ngOnInit() {
   	this.dtOptions = {
-  	  'initComplete': function(settings, json) {
-        const tableId = settings.sTableId;
-        const $_table = $('#' + tableId);
-        const $_panel = $_table.parents('.panel');
-
-        const $_containerLength = $_panel.find('.sel_dt_length');
-        const $_containerInfo = $_panel.find('.info_dt_results');
-        const $_containerPaginate = $_panel.find('.paginate_dt');
-
-        $_containerLength.children().remove();
-        $_containerInfo.children().remove();
-        $_containerPaginate.children().remove();
-
-        const $_datatableLength = $_panel.find('.dataTables_length');
-        const $_datatableInfo = $_panel.find('.dataTables_info');
-        const $_datatablePaginate = $_panel.find('.dataTables_paginate');
-
-        $_datatableLength.appendTo($_containerLength);
-        $_containerInfo.append($_datatableInfo);
-        $_containerPaginate.append($_datatablePaginate);
-  	  },
+      'initComplete': this._datatablesHelper.initComplete,
   	  dom: '<\'hide\'lt><\'row\'<\'col-sm-12\'tr>><\'hide\'ip>',
   	  bFilter: false,
   	  lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
@@ -118,14 +108,12 @@ export class BooksComponent implements AfterViewInit, OnInit {
 
       },
       rowCallback: (row: Node, data: any[] | Object, index: number) => {
-        /* $(row).data(data);
-
-        return row; */
+        
       }
     };
   
     this.dataTable = $(this.table.nativeElement);
-    this.dataTableInstance =  this.dataTable.DataTable(this.dtOptions);
+    this.dtInstance =  this.dataTable.DataTable(this.dtOptions);
   }
 
   ngAfterViewInit(): void {
@@ -134,24 +122,46 @@ export class BooksComponent implements AfterViewInit, OnInit {
     _self.dataTable.on('click', '.opt-edit', function(event){
       const $this = $(this);
       const id = $this.data('id');
-      const data = _self._getData(id);
+      const data = _self._datatablesHelper.getDataById(_self.dtInstance, id);
 
       console.log('action edit', data);
+
+      _self.openModal(data);
     });
 
     _self.dataTable.on('click', '.opt-remove', function(event){
       const $this = $(this);
       const id = $this.data('id');
-      const data = _self._getData(id);
+      const data = _self._datatablesHelper.getDataById(_self.dtInstance, id);
 
       console.log('action remove', data);
     });
   }
 
-  private _getData(id: number) {
-    return this.dataTableInstance.data().filter(function(item) {
-        return item.id === id;
-      })[0];
+  openModal(data: any) {
+    const title: string = data.id ? 'Editar libro' : 'Crear libro';
+
+    this.form.data = data;
+
+    this.modalRef = this.modalService.show(
+      this.template, 
+      {
+         backdrop: 'static',
+         keyboard: false 
+      }
+    );
+
+    this.modalRef.content = {
+      title: title,
+      data: data
+    }
   }
 
+  cancel(){
+    this.modalRef.hide();
+  }
+
+  accept(){
+    console.log('Aceptando...');
+  }
 }

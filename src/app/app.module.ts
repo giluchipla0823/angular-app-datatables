@@ -1,7 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { DataTablesModule } from 'angular-datatables';
+
+// Modules ngx-boostrap
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { AppComponent } from './app.component';
 import { ZeroConfigComponent } from './components/zero-config/zero-config.component';
@@ -21,8 +25,11 @@ import { BooksComponent } from './components/books/books.component';
   ],
   imports: [
     BrowserModule,
-    DataTablesModule
+    FormsModule,
+    DataTablesModule,
+    ModalModule.forRoot(),
   ],
+  exports: [ModalModule],
   providers: [],
   bootstrap: [AppComponent]
 })
