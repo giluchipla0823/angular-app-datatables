@@ -20,7 +20,10 @@ export class InitViewChildComponent implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     this.dtOptions = {
-      ajax: 'assets/data/persons.json',
+      ajax: {
+        url: 'assets/data/persons.json',
+        method: 'GET'
+      },
       columns: [{
         title: 'ID',
         data: 'id'
@@ -70,17 +73,12 @@ export class InitViewChildComponent implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
     const _self = this;
 
-    _self.dataTable.on('click', '.opt-edit', (event: any) => {
-        // const $element = $(event.target);
-        // const $parent = $element.parents('tr');
-
-        // _self.handlerClick('editar', $parent.data());
-
-        console.log(this);
-    });
-
     _self.dataTable.on('click', '.opt-edit', function(event){
-      console.log(this);
+      const $this = $(this);
+      const $row = $this.parents('tr[role="row"]');
+
+
+      console.log(this, $row.data());
     });
   }
 }
