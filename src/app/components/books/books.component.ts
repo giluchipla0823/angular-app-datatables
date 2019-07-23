@@ -47,26 +47,27 @@ export class BooksComponent implements AfterViewInit, OnInit {
   	  lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
   	  serverSide: true,
   	  processing: true,
+      responsive: true,
       ajax: {
         url: 'http://127.0.0.1:8000/api/books',
         method: 'GET',
-        data: function(d){
+        data: function(d) {
         	d.listFormat = 'datatables';
         	d.includes = 'author,genres';
         },
-        'dataFilter': function(response){
-            var json = JSON.parse(response);                                        
-            var data = json.data;
+        'dataFilter': function(response) {
+            const json = JSON.parse(response);
+            const data = json.data;
 
             return JSON.stringify({
-                "draw": data.draw,
-                "recordsTotal": data.recordsTotal,    
-                "recordsFiltered": data.recordsFiltered,
+                'draw': data.draw,
+                'recordsTotal': data.recordsTotal,
+                'recordsFiltered': data.recordsFiltered,
                 'data': data.items
             });
         },
-        "dataSrc": function(data){
-            if(data.data === undefined){
+        'dataSrc': function(data) {
+            if (data.data === undefined) {
                 return [];
             }
 
@@ -79,12 +80,12 @@ export class BooksComponent implements AfterViewInit, OnInit {
 	        data: 'id',
 	        name: 'id',
 	        className: 'dt-body-center'
-	      }, 
+	      },
 	      {
 	        title: 'Título',
 	        data: 'title',
 	        name: 'title'
-	      }, 
+	      },
 	      {
 	        title: 'Descripción',
 	        data: 'description',
@@ -99,12 +100,17 @@ export class BooksComponent implements AfterViewInit, OnInit {
 	        }
 	      },
 	      {
-	        title: 'Action',
+	        title: 'Acciones',
 	        render: function (data: any, type: any, full: any) {
 	          const self = this;
 	          const id = full.id;
 
-	          return `<button type="button" class="btn btn-primary opt-edit">EDITAR</button>`;
+	          return `<button type="button" data-id="${id}" class="btn btn-primary opt-edit">
+                      <i class="glyphicon glyphicon-edit"></i>
+                    </button>
+                    <button type="button" data-id="${id}" class="btn btn-danger opt-remove">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </button>`;
 	        }
 	      }
       ],
@@ -112,9 +118,9 @@ export class BooksComponent implements AfterViewInit, OnInit {
 
       },
       rowCallback: (row: Node, data: any[] | Object, index: number) => {
-        $(row).data(data);
+        /* $(row).data(data);
 
-        return row;
+        return row; */
       }
     };
   
@@ -127,11 +133,25 @@ export class BooksComponent implements AfterViewInit, OnInit {
 
     _self.dataTable.on('click', '.opt-edit', function(event){
       const $this = $(this);
-      const $row = $this.parents('tr[role="row"]');
+      const id = $this.data('id');
+      const data = _self._getData(id);
 
-
-      console.log(this, $row.data());
+      console.log('action edit', data);
     });
+
+    _self.dataTable.on('click', '.opt-remove', function(event){
+      const $this = $(this);
+      const id = $this.data('id');
+      const data = _self._getData(id);
+
+      console.log('action remove', data);
+    });
+  }
+
+  private _getData(id: number) {
+    return this.dataTableInstance.data().filter(function(item) {
+        return item.id === id;
+      })[0];
   }
 
 }

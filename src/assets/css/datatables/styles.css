@@ -175,10 +175,6 @@ div.dataTables_length label {
     float: left;
     text-align: left;
 }
-div.dataTables_length select {
-    /*width: 75px;*/
-    width: auto;
-}
 div.dataTables_filter label {
     font-weight: normal;
     float: right;
