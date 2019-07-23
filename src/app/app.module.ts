@@ -8,6 +8,7 @@ import { ZeroConfigComponent } from './components/zero-config/zero-config.compon
 import { WithAjaxComponent } from './components/with-ajax/with-ajax.component';
 import { RenderNewColumnsComponent } from './components/render-new-columns/render-new-columns.component';
 import { InitViewChildComponent } from './components/init-view-child/init-view-child.component';
+import { BooksComponent } from './components/books/books.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { InitViewChildComponent } from './components/init-view-child/init-view-c
     ZeroConfigComponent,
     WithAjaxComponent,
     RenderNewColumnsComponent,
-    InitViewChildComponent
+    InitViewChildComponent,
+    BooksComponent
   ],
   imports: [
     BrowserModule,
