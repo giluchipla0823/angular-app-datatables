@@ -73,20 +73,11 @@ export class InitViewChildComponent implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
     const _self = this;
 
-<<<<<<< HEAD
-    _self.dataTable.on('click', '.opt-edit', (event: any) => {
-        const $_element = $(event.target);
-        const $_parent = $_element.parents('tr');
-
-        _self.handlerClick('editar', $_parent.data());
-=======
     _self.dataTable.on('click', '.opt-edit', function(event){
       const $this = $(this);
       const $row = $this.parents('tr[role="row"]');
 
-
       console.log(this, $row.data());
->>>>>>> 5e55edd1b4024330ef8266c92e4cf7d4d9dfc0c9
     });
   }
 }

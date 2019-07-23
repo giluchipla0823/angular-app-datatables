@@ -21,35 +21,28 @@ export class BooksComponent implements AfterViewInit, OnInit {
 
   ngOnInit() {
   	this.dtOptions = {
-  	  initComplete: function(settings, json){
-  	  	//console.log('initcomplete', json);
+  	  'initComplete': function(settings, json) {
+        const tableId = settings.sTableId;
+        const $_table = $('#' + tableId);
+        const $_panel = $_table.parents('.panel');
 
-  	  	var $_api = this.api();
-
-        console.log($_api);
-
-        var tableId = settings.sTableId;
-        var $_table = $('#' + tableId);
-        var $_panel = $_table.parents('.panel');
-
-        var $_containerLength = $_panel.find('.sel_dt_length');
-        var $_containerInfo = $_panel.find('.info_dt_results');
-        var $_containerPaginate = $_panel.find('.paginate_dt');
+        const $_containerLength = $_panel.find('.sel_dt_length');
+        const $_containerInfo = $_panel.find('.info_dt_results');
+        const $_containerPaginate = $_panel.find('.paginate_dt');
 
         $_containerLength.children().remove();
         $_containerInfo.children().remove();
         $_containerPaginate.children().remove();
 
-        var $_datatableLength = $_panel.find('.dataTables_length');
-        var $_datatableInfo = $_panel.find('.dataTables_info');
-        var $_datatablePaginate = $_panel.find('.dataTables_paginate');
+        const $_datatableLength = $_panel.find('.dataTables_length');
+        const $_datatableInfo = $_panel.find('.dataTables_info');
+        const $_datatablePaginate = $_panel.find('.dataTables_paginate');
 
         $_datatableLength.appendTo($_containerLength);
         $_containerInfo.append($_datatableInfo);
         $_containerPaginate.append($_datatablePaginate);
-
   	  },
-  	  dom: "<'hide'lt>tr<'hide'ip>",
+  	  dom: '<\'hide\'lt><\'row\'<\'col-sm-12\'tr>><\'hide\'ip>',
   	  bFilter: false,
   	  lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
   	  serverSide: true,
