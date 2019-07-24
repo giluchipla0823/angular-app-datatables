@@ -162,6 +162,6 @@ export class BooksComponent implements AfterViewInit, OnInit {
   }
 
   accept(){
-    console.log('Aceptando...');
+    console.log('Aceptando...', this.modalRef.content.data);
   }
 }

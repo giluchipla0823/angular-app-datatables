@@ -175,6 +175,8 @@ div.dataTables_length label {
     font-weight: normal;
     float: left;
     text-align: left;
+    margin-left: 10px;
+    margin-top: 3px;
 }
 div.dataTables_filter label {
     font-weight: normal;
@@ -199,5 +201,5 @@ table.table {
 }
 
 .panel-heading.clearfix .panel-title{
-    margin-top: 8px;
+    margin-top: 10px;
 }
