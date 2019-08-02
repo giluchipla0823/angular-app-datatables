@@ -1,5 +1,4 @@
-
-const datatablesHelper = () => {
+const DatatablesHelper = () => {
     const initComplete = (settings: any, json: any) => {
         const tableId = settings.sTableId;
         const $_table = $('#' + tableId);
@@ -22,17 +21,43 @@ const datatablesHelper = () => {
         $_containerPagination.append($_datatablePaginate);
     };
 
-    const getDataById = (instance: any,  id: number) => {
+    const getFilterData = (instance: any, column: string,  value: any) => {
         return instance.data().filter(function(item) {
-            return item.id === id;
+            return item[column] === value;
         })[0];
+    }
+
+    const renderDOM = `<\'hide\'lt><\'row\'<\'col-sm-12\'tr>><\'hide\'ip>`;
+
+
+    const reloadData = ($instance: any,  resetPagination: boolean) => {
+        $instance.ajax.reload(function(json){
+        console.log('reload datatable');
+        console.log(json);
+
+        /*
+        var count_ul = $_ulRow.length;
+
+        for(var i = 0; i < count_ul; i++){
+            var index = $($_ulRow[i]).data('dtrIndex');
+            $('#' + tableId +' tbody tr')
+                .not('tr.child')
+                .eq(index)
+                .children('td:eq(0)')
+                .trigger('click');
+        }
+
+        */
+    }, resetPagination);
     }
 
     return {
         initComplete: initComplete,
-        getDataById: getDataById
+        getFilterData: getFilterData,
+        renderDOM: renderDOM,
+        reloadData: reloadData,
     };
 };
 
-export default datatablesHelper;
+export default DatatablesHelper;
 

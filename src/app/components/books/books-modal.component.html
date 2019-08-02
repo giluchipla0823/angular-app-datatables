@@ -1,0 +1,63 @@
+<div class="modal-header">
+  	<h4 class="modal-title pull-left">Modal title</h4>
+	<button type="button" 
+			class="close pull-right" 
+	  		aria-label="Close"
+	  		(click)="cancel()">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<div class="modal-body">
+  	<pre>{{ modal.content.data | json }}</pre>
+  
+  	<form id="frm_books" name="frm_books" [formGroup]="bookForm">
+		<div class="form-group" [ngClass]="{'has-error': (!form.title.pristine || submitted) && form.title.errors }">
+			<label for="title">Título</label>
+			<input type="text"
+				   id="title"
+				   name="title"
+				   formControlName="title"	
+				   class="form-control"
+				   [(ngModel)]="modal.content.data.title" />
+
+		   	<div *ngIf="(!form.title.pristine || submitted) && form.title.errors" 
+		   		 class="help-block">
+				<div *ngIf="form.title.errors.required">* Campo requerido</div>
+			</div>
+		</div>
+		<div class="form-group" [ngClass]="{'has-error': (!form.description.pristine || submitted) && form.description.errors }">
+			<label for="description">Descripción</label>
+			<textarea
+				id="description"
+				name="description"
+				formControlName="description"	
+				class="form-control"
+				[(ngModel)]="modal.content.data.description"></textarea>
+
+			<div *ngIf="(!form.description.pristine || submitted) && form.description.errors" 
+		   		 class="help-block">
+				<div *ngIf="form.description.errors.required">* Campo requerido</div>
+			</div>
+		</div>
+
+		<div class="form-groupm">
+			<label>Autor</label>
+	      	<select2 #selector [data]="authors" 
+	               	 [options]="options"
+	               	 (valueChanged)="eventChangeAuthor($event)">
+	            <option></option>
+	        </select2>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" 
+			class="btn btn-primary" 
+			(click)="accept()">Aceptar</button>
+	<button type="button" 
+			class="btn btn-warning" 
+			(click)="clear()">Limpiar</button>
+	<button type="button" 
+			class="btn btn-default" 
+			(click)="cancel()">Cancelar</button>
+</div>

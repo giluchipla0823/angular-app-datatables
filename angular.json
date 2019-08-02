@@ -27,6 +27,9 @@
               "node_modules/bootstrap/dist/css/bootstrap.css",
               "node_modules/datatables.net-bs/css/dataTables.bootstrap.css",
               "node_modules/datatables.net-responsive-bs/css/responsive.bootstrap.css",
+              "node_modules/select2/dist/css/select2.min.css",
+              "node_modules/select2-bootstrap-theme/dist/select2-bootstrap.min.css",
+              "src/assets/css/select2-bootstrap-theme/select2-bootstrap-custom.css",
               "src/assets/css/datatables/styles.css"
             ],
             "scripts": [
@@ -35,7 +38,9 @@
               "node_modules/datatables.net/js/jquery.dataTables.js",
               "node_modules/datatables.net-bs/js/dataTables.bootstrap.js",
               "node_modules/datatables.net-responsive/js/dataTables.responsive.js",
-              "node_modules/datatables.net-responsive-bs/js/responsive.bootstrap.js"
+              "node_modules/datatables.net-responsive-bs/js/responsive.bootstrap.js",
+              "node_modules/select2/dist/js/select2.full.js",
+              "node_modules/select2/dist/js/i18n/es.js"
             ]
           },
           "configurations": {

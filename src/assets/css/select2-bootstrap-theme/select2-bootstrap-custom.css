@@ -1,0 +1,19 @@
+/*.select2-container--bootstrap .select2-selection--single,
+.select2-container--bootstrap .select2-selection--multiple{
+    line-height: 1.5;
+    font-size: 1rem;
+    height: auto;
+}
+
+.select2-container--bootstrap .select2-selection--single{
+    padding: .375rem .75rem;
+}
+
+.select2-container--bootstrap .select2-selection--multiple{
+    padding: .140rem .25rem;
+}
+
+.select2-container--bootstrap .select2-selection__clear{
+    margin-right: 15px;
+    margin-top: -1px;
+}*/

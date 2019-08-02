@@ -29,10 +29,15 @@
     "datatables.net-responsive": "^2.2.3",
     "datatables.net-responsive-bs": "^2.2.3",
     "datatables.net-responsive-dt": "^2.2.3",
-    "ngx-bootstrap": "3.1.4",
     "jquery": "^3.4.1",
+    "ngx-bootstrap": "3.1.4",
     "rxjs": "6.0.0",
-    "zone.js": "0.8.26"
+    "sweetalert": "^2.1.2",
+    "zone.js": "0.8.26",
+    "ng2-select2": "^1.0.0-beta.16",
+    "select2": "^4.0.3",
+    "select2-bootstrap-theme": "0.1.0-beta.10",
+    "select2-bootstrap4-theme": "^1.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.7.0",
