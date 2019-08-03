@@ -1,5 +1,5 @@
 <div class="modal-header">
-  	<h4 class="modal-title pull-left">Modal title</h4>
+  	<h4 class="modal-title pull-left">{{ modal.content.title }}</h4>
 	<button type="button" 
 			class="close pull-right" 
 	  		aria-label="Close"
@@ -8,45 +8,69 @@
 	</button>
 </div>
 <div class="modal-body">
-  	<pre>{{ modal.content.data | json }}</pre>
+  	<pre>{{ form.data | json }}</pre>
   
   	<form id="frm_books" name="frm_books" [formGroup]="bookForm">
-		<div class="form-group" [ngClass]="{'has-error': (!form.title.pristine || submitted) && form.title.errors }">
+		<div class="form-group" 
+			 [ngClass]="{'has-error': (!formControls.title.pristine || submitted) && formControls.title.errors }">
 			<label for="title">Título</label>
 			<input type="text"
 				   id="title"
 				   name="title"
 				   formControlName="title"	
 				   class="form-control"
-				   [(ngModel)]="modal.content.data.title" />
-
-		   	<div *ngIf="(!form.title.pristine || submitted) && form.title.errors" 
+				   [(ngModel)]="this.form.data.title" />
+		   	<div *ngIf="(!formControls.title.pristine || submitted) && formControls.title.errors" 
 		   		 class="help-block">
-				<div *ngIf="form.title.errors.required">* Campo requerido</div>
+				<div *ngIf="formControls.title.errors.required">* Campo requerido</div>
 			</div>
 		</div>
-		<div class="form-group" [ngClass]="{'has-error': (!form.description.pristine || submitted) && form.description.errors }">
+		<div class="form-group" 
+			 [ngClass]="{'has-error': (!formControls.description.pristine || submitted) && formControls.description.errors }">
 			<label for="description">Descripción</label>
 			<textarea
 				id="description"
 				name="description"
 				formControlName="description"	
 				class="form-control"
-				[(ngModel)]="modal.content.data.description"></textarea>
+				[(ngModel)]="this.form.data.description"></textarea>
 
-			<div *ngIf="(!form.description.pristine || submitted) && form.description.errors" 
+			<div *ngIf="(!formControls.description.pristine || submitted) && formControls.description.errors" 
 		   		 class="help-block">
-				<div *ngIf="form.description.errors.required">* Campo requerido</div>
+				<div *ngIf="formControls.description.errors.required">* Campo requerido</div>
 			</div>
 		</div>
 
-		<div class="form-groupm">
+		<div class="form-group" 
+			 [ngClass]="{'has-error': (!formControls.author_id.pristine || submitted) && formControls.author_id.errors }">
 			<label>Autor</label>
-	      	<select2 #selector [data]="authors" 
+	      	<select2 #selectAuthors [data]="authors" 
 	               	 [options]="options"
-	               	 (valueChanged)="eventChangeAuthor($event)">
+	               	 (valueChanged)="eventChangeSelect($event, 'author_id')"
+					 required="true">
 	            <option></option>
 	        </select2>
+
+			<div *ngIf="(!formControls.author_id.pristine || submitted) && formControls.author_id.errors" 
+		   		 class="help-block">
+				<div *ngIf="formControls.author_id.errors.required">* Campo requerido</div>
+			</div>
+		</div>
+
+		<div class="form-group" 
+			 [ngClass]="{'has-error': (!formControls.publisher_id.pristine || submitted) && formControls.publisher_id.errors }">
+			<label>Publicador</label>
+	      	<select2 #selectPublishers [data]="publishers" 
+	               	 [options]="options"
+	               	 (valueChanged)="eventChangeSelect($event, 'publisher_id')"
+					 required="true">
+	            <option></option>
+	        </select2>
+
+			<div *ngIf="(!formControls.publisher_id.pristine || submitted) && formControls.publisher_id.errors" 
+		   		 class="help-block">
+				<div *ngIf="formControls.publisher_id.errors.required">* Campo requerido</div>
+			</div>
 		</div>
 	</form>
 </div>

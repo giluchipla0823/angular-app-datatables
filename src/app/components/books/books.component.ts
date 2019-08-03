@@ -1,12 +1,14 @@
 import { AfterViewInit, Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import DatatablesHelper from '../../helpers/datatables.helper';
-import swal from 'sweetalert';
 import { Select2OptionData } from 'ng2-select2';
-
 import { AuthorsService } from '../../services/authors/authors.service';
+import 'sweetalert';
+import { PublishersService } from '../../services/publishers/publishers.service';
+import { BooksService } from '../../services/books/books.service';
 
 declare var $;
+declare var swal: any;
 
 @Component({
   selector: 'app-books',
@@ -17,15 +19,24 @@ export class BooksComponent implements AfterViewInit, OnInit {
   
   @ViewChild('dataTable') table;
   @ViewChild('template') template;
-  @ViewChild('selector') selector;
+  @ViewChild('selectSearchAuthor') selectSearchAuthor;
+  @ViewChild('selectSearchPublisher') selectSearchPublisher;
 
   public options: Select2Options;
+  public modalRef: BsModalRef;
 
   nested: any = {};
 
   authors: any = {
     data: [],
-    selected: null
+    selected: null,
+    loading: false
+  }
+
+  publishers: any = {
+    data: [],
+    selected: null,
+    loading: false
   }
 
   form: any = {
@@ -34,40 +45,46 @@ export class BooksComponent implements AfterViewInit, OnInit {
 
   private _datatablesHelper: any = DatatablesHelper();
 
-  public modalRef: BsModalRef;
-
   constructor(
     private modalService: BsModalService,
-    private _authorsService: AuthorsService
+    private _booksService: BooksService,
+    private _authorsService: AuthorsService,
+    private _publishersService: PublishersService
   ) {
   }
 
   ngOnInit() {
+    this.getAuthors();
+    this.getPublishers();
+    this.loadSelect2();
+    this.loadDatatables();
+  }
+
+  loadSelect2(){
+      this.options = {
+        theme: 'bootstrap',
+        placeholder: 'Seleccionar',
+        allowClear: true,
+        width: '100%',
+        language: "es"
+      };
+  }
+
+  loadDatatables(): void{
     const vm = this;
 
-
-    vm.getAuthors();
-
-    this.options = {
-      theme: 'bootstrap',
-      placeholder: 'Seleccionar',
-      allowClear: true,
-      width: '100%',
-      language: "es"
-    }
-
-  	this.nested.dtOptions = {
+    this.nested.dtOptions = {
       'initComplete': this._datatablesHelper.initComplete,
-  	  dom: this._datatablesHelper.renderDOM,
-  	  bFilter: false,
-  	  lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
-  	  serverSide: true,
-  	  processing: true,
-      responsive: true,
-      ajax: {
-        url: 'http://127.0.0.1:8000/api/books',
-        method: 'GET',
-        data: function(d) {
+  	  'dom': this._datatablesHelper.renderDOM,
+  	  'bFilter': false,
+  	  'lengthMenu': [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
+  	  'serverSide': true,
+  	  'processing': true,
+      'responsive': true,
+      'ajax': {
+        'url': 'http://127.0.0.1:8000/api/books',
+        'method': 'GET',
+        'data': function(d) {
         	d.listFormat = 'datatables';
         	d.includes = 'author,genres';
 
@@ -98,7 +115,7 @@ export class BooksComponent implements AfterViewInit, OnInit {
             return data.data;
         },
       },
-      columns: [
+      'columns': [
 	      {
 	        title: 'ID',
 	        data: 'id',
@@ -137,10 +154,10 @@ export class BooksComponent implements AfterViewInit, OnInit {
 	        }
 	      }
       ],
-      drawCallback: (settings: any) => {
+      'drawCallback': (settings: any) => {
 
       },
-      rowCallback: (row: Node, data: any[] | Object, index: number) => {
+      'rowCallback': (row: Node, data: any[] | Object, index: number) => {
         
       }
     };
@@ -150,11 +167,10 @@ export class BooksComponent implements AfterViewInit, OnInit {
   }
 
   getAuthors(){
+    this.authors.loading = true;
     this._authorsService.getAuthors()
         .subscribe((response: any) => {
-          const data = response.data;
-
-          const authors: Array<Select2OptionData> = data.map((author: any, idx: number) => {
+          const authors: Array<Select2OptionData> = response.data.map((author: any) => {
             return {
               id: author.id,
               text: author.name,
@@ -162,25 +178,33 @@ export class BooksComponent implements AfterViewInit, OnInit {
           });
 
           this.authors.data = authors;
-
-          setTimeout(() => {
-            this.selector.element.val(null).trigger('change')
-
-            this.eventChangeAuthor({
-              value: null,
-              data: []
-            });
-          }, 0); 
+          this.authors.loading = false;
         });
   }
 
-  eventChangeAuthor(e: any): void {
+  getPublishers(){
+    this.publishers.loading = true;
+    this._publishersService.getPublishers()
+        .subscribe((response: any) => {
+          const publishers: Array<Select2OptionData> = response.data.map((publisher: any) => {
+            return {
+              id: publisher.id,
+              text: publisher.name,
+            }
+          });
+
+          this.publishers.data = publishers;
+          this.publishers.loading = false;
+        });
+  }
+
+  eventChangeSelect(e: any, field: string): void {
     const value = e.value;
     
-    delete this.form.data.author;
+    delete this.form.data[field];
 
     if(value){
-      this.form.data.author = {
+      this.form.data[field] = {
         id: value
       };
     }
@@ -190,21 +214,16 @@ export class BooksComponent implements AfterViewInit, OnInit {
     const vm = this;
 
     vm.nested.dataTable.on('click', '.opt-edit', function(event){
-      const $this = $(this);
-      const id = $this.data('id');
-      const data = vm._datatablesHelper.getFilterData(vm.dtInstance, 'id', id);
-
-      console.log('action edit', data);
+      const id = $(this).data('id');
+      const data = vm._datatablesHelper.getFilterData(vm.nested.dtInstance, 'id', id);
 
       vm.openModal(data);
     });
 
     vm.nested.dataTable.on('click', '.opt-remove', function(event){
-      const $this = $(this);
-      const id = $this.data('id');
-      const data = vm._datatablesHelper.getFilterData(vm.dtInstance, 'id', id);
+      const id = $(this).data('id');
 
-      /*swal({
+      swal({
         title: "Confirmar",
         text: "¿Desea eliminar el libro seleccionado?",
         icon: "warning",
@@ -213,12 +232,17 @@ export class BooksComponent implements AfterViewInit, OnInit {
       })
       .then((isConfirm) => {
         if (isConfirm) {
-          swal("El libro seleccionado se ha eliminado correctamente", {
-            icon: "success",
-            title: 'Éxito'
-          });
+          vm._booksService.deleteBook(id)
+            .subscribe((response: any) => {
+              swal(response.message, {
+                icon: "success",
+                title: 'Éxito'
+              });
+
+              vm.reloadData(true);
+            });
         }
-      });*/
+      });
     });
   }
 
@@ -243,5 +267,21 @@ export class BooksComponent implements AfterViewInit, OnInit {
     }
   }
 
+  clearForm(): void{
+    const select2Elements = [
+      {
+        element: this.selectSearchAuthor.element,
+        field: 'author'
+      },
+      {
+        element: this.selectSearchPublisher.element,
+        field: 'publisher'
+      }
+    ];
 
+    select2Elements.forEach( item  => {
+      item.element.val(null).trigger('change');
+      this.eventChangeSelect({value: null, data: []}, item.field);
+    });
+  }
 }

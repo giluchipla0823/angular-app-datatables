@@ -12,19 +12,57 @@
 			   [(ngModel)]="form.data.title" />
 	</div>
 
-	<div class="form-groupm">
+	<div class="form-group">
 		<label>Autor</label>
-      	<select2 #selector [data]="authors.data" 
+	
+		<div *ngIf="authors.data.length === 0">
+			<select2 [options]="options"
+					 [disabled]="authors.loading">
+				<option></option>
+			</select2>
+		</div>
+
+		<div *ngIf="authors.data.length > 0">
+			<select2 #selectSearchAuthor 
+				 [data]="authors.data"
+				 [disabled]="authors.loading" 
                	 [options]="options"
-                 (valueChanged)="eventChangeAuthor($event)">
-     		<option></option>
-         </select2>
+                 (valueChanged)="eventChangeSelect($event, 'author')">
+				<option></option>
+			</select2>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label>Publicador</label>
+      	<div *ngIf="publishers.data.length === 0">
+			<select2 [options]="options"
+					 [disabled]="publishers.loading">
+				<option></option>
+			</select2>
+		</div>
+
+		<div *ngIf="publishers.data.length > 0">
+			<select2 #selectSearchPublisher 
+				 [data]="publishers.data"
+				 [disabled]="publishers.loading" 
+               	 [options]="options"
+                 (valueChanged)="eventChangeSelect($event, 'publisher')">
+				<option></option>
+			</select2>
+		</div>
 	</div>
 
 	<div class="form-group">
 		<button type="submit"
 				class="btn btn-primary">
-			Buscar			
+			Buscar
+		</button>
+		&nbsp;&nbsp;
+		<button type="reset"
+				(click)="clearForm()"	
+				class="btn btn-default">
+			Limpiar
 		</button>
 	</div>
 
@@ -66,5 +104,8 @@
 </div>
 
 <ng-template #template>
-	<app-books-modal [modal]="modalRef" [authors]="authors.data"></app-books-modal>
+	<app-books-modal 
+		[modal]="modalRef" 
+		[authors]="authors.data"
+		[publishers]="publishers.data"></app-books-modal>
 </ng-template>

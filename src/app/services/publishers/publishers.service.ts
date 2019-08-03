@@ -4,14 +4,14 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthorsService {
+export class PublishersService {
 
   constructor(private _http: HttpClient) {
   	
   }
 
-  getAuthors(){
-  	const url = 'http://127.0.0.1:8000/api/authors';
+  getPublishers(){
+  	const url = 'http://127.0.0.1:8000/api/publishers';
 
   	return this._http.get(url);
   }
