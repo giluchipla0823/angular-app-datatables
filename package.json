@@ -23,7 +23,7 @@
     "angular-datatables": "^6.0.0",
     "bootstrap": "^3.3.7",
     "core-js": "2.5.4",
-    "datatables.net": "^1.10.19",
+    "datatables.net": "^1.10.22",
     "datatables.net-bs": "^1.10.19",
     "datatables.net-dt": "^1.10.19",
     "datatables.net-responsive": "^2.2.3",
